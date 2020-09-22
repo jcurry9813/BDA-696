@@ -9,7 +9,7 @@ use baseball;
 drop table if exists CareerBA;
 
 create table CareerBA
-select batter, sum(Hit)/sum(atBat) as BA
+select batter, sum(Hit)/sum(atBat) as cBA
 from batter_counts where atBat>0
 group by batter;
 
@@ -20,7 +20,7 @@ select * from CareerBA;
 drop table if exists SeasonalBA;
 
 create table SeasonalBA
-select batter_counts.batter, sum(batter_counts.Hit)/sum(batter_counts.atBat) as BA, 
+select batter_counts.batter, sum(batter_counts.Hit)/sum(batter_counts.atBat) as sBA, 
 year(game.local_date) as Season
 from batter_counts join game on batter_counts.game_id=game.game_id where atBat>0
 group by Season, batter
@@ -43,7 +43,7 @@ select Hit, atBat, batter, date(game.local_date) as gameday,
 							    order by game.local_date
 							    asc rows between 101 preceding
 							    and 1 preceding))
-as rollingavg
+as rBA
 from batter_counts join game on batter_counts.game_id = game.game_id where atBat > 0
 group by gameday, batter, Hit, atBat, game.local_date
 order by gameday, batter;
