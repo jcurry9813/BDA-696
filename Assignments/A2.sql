@@ -33,23 +33,22 @@ select * from SeasonalBA;
 drop table if exists RollingBA;
 
 create table RollingBA
-select Hit, atBat, batter, date(game.local_date) as gameday,
-(sum(batter_counts.Hit) over (partition by batter
-						      order by game.local_date
-						      asc rows between 101 preceding
-						      and 1 preceding))
+select batter, date(game.local_date) as gameday,
+sum(batter_counts.Hit) over (partition by batter
+						     	order by date(game.local_date)
+							    range between interval '101' day preceding
+						    	and interval '1' day preceding)
 						/
-(sum(batter_counts.atBat) over (partition by batter
-							    order by game.local_date
-							    asc rows between 101 preceding
-							    and 1 preceding))
+sum(batter_counts.atBat) over (partition by batter
+							    order by date(game.local_date)
+							    range between interval '101' day preceding
+							    and interval '1' day preceding)
 as rBA
 from batter_counts join game on batter_counts.game_id = game.game_id where atBat > 0
-group by gameday, batter, Hit, atBat, game.local_date
+group by gameday, batter
 order by gameday, batter;
 
 select * from RollingBA;
-
 
 
 
