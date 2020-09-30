@@ -5,3 +5,6 @@
 #    pip-compile --output-file=requirements.txt requirements.in
 #
 numpy==1.18.4             # via -r requirements.in
+py4j==0.10.9              # via pyspark
+pyspark-stubs==3.0.0.post1  # via -r requirements.in
+pyspark==3.0.1            # via -r requirements.in, pyspark-stubs
