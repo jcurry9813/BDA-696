@@ -1,9 +1,9 @@
 import sys
 
+from transform import rollingTransform
 from pyspark import StorageLevel
 from pyspark.ml import Pipeline
 from pyspark.sql import SparkSession
-from transform import rollingTransform
 
 
 def main():
@@ -21,22 +21,14 @@ def main():
             SELECT game_id, batter, Hit AS hit, atBat AS atbat
             FROM batter_counts WHERE atBat > 0
             """
-    # Enter your username and password to connect to baseball database
+# Enter your username and password to connect to baseball database
 
     user = "YourUserHere"
     password = "YourPassHere"
 
-    game = (
-        spark.read.format("jdbc")
-        .options(url=url, query=gameq, user=user, password=password)
-        .load()
-    )
+    game = (spark.read.format("jdbc").options(url=url, query=gameq, user=user, password=password).load())
 
-    batter_counts = (
-        spark.read.format("jdbc")
-        .options(url=url, query=batter, user=YourUsernameHere, password=YourPassHere)
-        .load()
-    )
+    batter_counts = (spark.read.format("jdbc").options(url=url, query=batter, user=user, password=password).load())
 
     game.createOrReplaceTempView("game")
     batter_counts.createOrReplaceTempView("batter_counts")
